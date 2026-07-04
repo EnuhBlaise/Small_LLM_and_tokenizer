@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>small-llm — a tiny tokenizer & language model toolkit</title>
+<meta name="description" content="A compact, self-contained Python toolkit for text preprocessing, BPE tokenization, embeddings, and training a tiny transformer language model." />
+<style>
+  :root {
+    --bg: #0d1117;
+    --panel: #161b22;
+    --border: #30363d;
+    --text: #e6edf3;
+    --muted: #9198a1;
+    --accent: #7ee787;
+    --accent2: #79c0ff;
+    --code-bg: #0b0f14;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  a { color: var(--accent2); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 20px; }
+  header {
+    text-align: center;
+    padding: 72px 20px 48px;
+    background: radial-gradient(ellipse at top, #1b2430 0%, var(--bg) 70%);
+    border-bottom: 1px solid var(--border);
+  }
+  header h1 { font-size: 2.6rem; margin: 0 0 8px; letter-spacing: -0.02em; }
+  header .tag { color: var(--accent); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.95rem; }
+  header p.lede { color: var(--muted); max-width: 620px; margin: 18px auto 28px; font-size: 1.08rem; }
+  .btns a {
+    display: inline-block; margin: 6px; padding: 10px 20px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--panel); color: var(--text);
+    font-weight: 600;
+  }
+  .btns a.primary { background: var(--accent2); color: #0b0f14; border-color: var(--accent2); }
+  .btns a:hover { text-decoration: none; border-color: var(--accent2); }
+  section { padding: 44px 0; border-bottom: 1px solid var(--border); }
+  section h2 { font-size: 1.5rem; margin-top: 0; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; }
+  .card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+    padding: 18px 20px;
+  }
+  .card h3 { margin: 0 0 6px; font-size: 1.05rem; color: var(--accent); }
+  .card p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+  pre {
+    background: var(--code-bg); border: 1px solid var(--border); border-radius: 10px;
+    padding: 16px 18px; overflow-x: auto; font-size: 0.88rem;
+  }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  pre code { color: #d1d9e0; }
+  .cmt { color: #6e7681; }
+  .kw { color: #ff7b72; }
+  .str { color: #a5d6ff; }
+  .fn { color: #d2a8ff; }
+  ol.steps { padding-left: 20px; }
+  ol.steps li { margin-bottom: 8px; }
+  .pipeline { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: center; margin: 8px 0; }
+  .pipeline .step {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 20px;
+    padding: 6px 16px; font-size: 0.9rem; font-family: ui-monospace, monospace;
+  }
+  .pipeline .arrow { color: var(--muted); }
+  footer { text-align: center; color: var(--muted); padding: 32px 20px 56px; font-size: 0.9rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="tag">pip install -e ".[all]"</div>
+    <h1>small-llm</h1>
+    <p class="lede">
+      A compact, self-contained Python toolkit for text preprocessing, Byte Pair
+      Encoding tokenization, embeddings, and training a tiny transformer language
+      model. Built for teaching &mdash; kept clean enough for research.
+    </p>
+    <div class="btns">
+      <a class="primary" href="https://github.com/EnuhBlaise/Small_LLM_and_tokenizer">View on GitHub</a>
+      <a href="#quickstart">Quick start</a>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section>
+    <h2>The pipeline</h2>
+    <div class="pipeline">
+      <span class="step">raw text</span><span class="arrow">→</span>
+      <span class="step">clean</span><span class="arrow">→</span>
+      <span class="step">BPE tokenize</span><span class="arrow">→</span>
+      <span class="step">embed</span><span class="arrow">→</span>
+      <span class="step">train LM</span><span class="arrow">→</span>
+      <span class="step">generate</span>
+    </div>
+    <p style="color:var(--muted); text-align:center;">
+      Every stage is an importable module. Use the whole pipeline, or just the piece you need.
+    </p>
+  </section>
+
+  <section>
+    <h2>What's inside</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>preprocess</h3>
+        <p>Strip HTML tags &amp; entities, filter non-text Unicode while keeping letters, numbers, and punctuation.</p>
+      </div>
+      <div class="card">
+        <h3>tokenization</h3>
+        <p>Character/word tokenizers plus a full BPE implementation — step-by-step helpers and a reusable <code>BPEWordTokenizer</code> with save/load.</p>
+      </div>
+      <div class="card">
+        <h3>embeddings</h3>
+        <p>Cosine similarity, token lookup, nearest-neighbour search, and t-SNE / dimension plots. Pure NumPy + scikit-learn.</p>
+      </div>
+      <div class="card">
+        <h3>model</h3>
+        <p>A small GPT-style transformer in Keras 3 (JAX/TF/PyTorch), with a live text-generation callback. No course dependency.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="quickstart">
+    <h2>Quick start</h2>
+<pre><code><span class="cmt"># Train and reuse a subword tokenizer</span>
+<span class="kw">from</span> small_llm.tokenization <span class="kw">import</span> BPEWordTokenizer
+
+tok = <span class="fn">BPEWordTokenizer</span>([<span class="str">"the quick brown fox"</span>, <span class="str">"the lazy dog"</span>], num_merges=<span class="str">50</span>)
+ids = tok.<span class="fn">encode</span>(<span class="str">"the fox"</span>)      <span class="cmt"># [12, 7, 33, ...]</span>
+tok.<span class="fn">decode</span>(ids)                  <span class="cmt"># "the fox"</span>
+tok.<span class="fn">save</span>(<span class="str">"my_bpe.json"</span>)          <span class="cmt"># reuse across experiments</span>
+
+<span class="cmt"># Explore embeddings</span>
+<span class="kw">from</span> small_llm.embeddings <span class="kw">import</span> load_embeddings, most_similar
+emb, labels = <span class="fn">load_embeddings</span>(<span class="str">"gemma_embeddings.npz"</span>)
+<span class="fn">most_similar</span>(<span class="str">"king"</span>, emb, labels, top_k=<span class="str">5</span>)   <span class="cmt"># [('queen', 0.63), ...]</span>
+
+<span class="cmt"># Train the tiny language model</span>
+<span class="kw">from</span> small_llm.model <span class="kw">import</span> create_model, prepare_sequences
+inputs, targets, max_len = <span class="fn">prepare_sequences</span>(encoded, tok.pad_token_id)
+model = <span class="fn">create_model</span>(max_len, tok.vocabulary_size)
+model.<span class="fn">fit</span>(inputs, targets, epochs=<span class="str">100</span>, batch_size=<span class="str">2</span>)</code></pre>
+  </section>
+
+  <section>
+    <h2>From notebooks to a package</h2>
+    <p>
+      The project started as six Google DeepMind <em>AI Foundations</em> lab
+      notebooks. Each is preserved under <code>Notebooks/</code> and reproduced
+      as a runnable script under <code>examples/</code>:
+    </p>
+    <ol class="steps">
+      <li><code>01_preprocess.py</code> — clean raw text</li>
+      <li><code>02_tokenize_basic.py</code> — character/word tokenization &amp; frequencies</li>
+      <li><code>03_learn_bpe.py</code> — learn BPE merges step by step</li>
+      <li><code>04_train_tokenizer.py</code> — train &amp; save a BPE tokenizer</li>
+      <li><code>05_embeddings.py</code> — similarity &amp; nearest neighbours</li>
+      <li><code>06_train_slm.py</code> — the full training pipeline</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Built for research</h2>
+    <div class="grid">
+      <div class="card"><h3>Your corpus</h3><p>Pass any <code>list[str]</code>, or load plain text with <code>data.load_text_lines()</code>.</p></div>
+      <div class="card"><h3>Tunable model</h3><p><code>embed_dim</code>, <code>num_heads</code>, <code>ff_dim</code>, <code>num_blocks</code>, dropout, learning rate.</p></div>
+      <div class="card"><h3>Any backend</h3><p>Set <code>KERAS_BACKEND</code> to jax, tensorflow, or torch.</p></div>
+      <div class="card"><h3>Tested</h3><p>A <code>pytest</code> suite covers preprocessing, tokenization, and embeddings.</p></div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  Adapted from the Google DeepMind <em>AI Foundations</em> course · Apache-2.0 ·
+  <a href="https://github.com/EnuhBlaise/Small_LLM_and_tokenizer">github.com/EnuhBlaise/Small_LLM_and_tokenizer</a>
+</footer>
+
+</body>
+</html>

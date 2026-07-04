@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.eggs/
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Trained artifacts produced by the examples
+*.json
+!docs/**/*.json
+africa_galore_bpe.json
+*.keras
+*.npz
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
