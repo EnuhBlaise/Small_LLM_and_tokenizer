@@ -140,7 +140,7 @@ ids = tok.<span class="fn">encode</span>(<span class="str">"the fox"</span>)    
 tok.<span class="fn">decode</span>(ids)                  <span class="cmt"># "the fox"</span>
 tok.<span class="fn">save</span>(<span class="str">"my_bpe.json"</span>)          <span class="cmt"># reuse across experiments</span>
 
-<span class="cmt"># Explore embeddings</span>
+<span class="cmt"># Explore embeddings. (May need to get your own .npz file. Still to resolve) </span>
 <span class="kw">from</span> small_llm.embeddings <span class="kw">import</span> load_embeddings, most_similar
 emb, labels = <span class="fn">load_embeddings</span>(<span class="str">"gemma_embeddings.npz"</span>)
 <span class="fn">most_similar</span>(<span class="str">"king"</span>, emb, labels, top_k=<span class="str">5</span>)   <span class="cmt"># [('queen', 0.63), ...]</span>
